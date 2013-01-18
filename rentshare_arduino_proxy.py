@@ -12,7 +12,7 @@ import serial
 
 sock_host = 'localhost'
 sock_port = 8888
-ser_host  = '/dev/ttyACM0'
+ser_host  = '/dev/ttyACM0' if len(sys.argv) <= 1 else sys.argv[1]
 ser_port  = 9600
 backlog = 5
 size = 1
