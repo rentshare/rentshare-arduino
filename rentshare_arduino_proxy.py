@@ -26,7 +26,7 @@ input = [server,sys.stdin]
 running = 1
 
 print 'RentShare Arduino Proxy'
-print '    Usage: write message and press enter. (max 7 characters)'
+print '    Usage: write message and press enter. (max 8 characters)'
 print ''
 
 sys.stdout.write('>>> ')
@@ -44,7 +44,7 @@ while running:
 
 		elif s == sys.stdin:
 			# handle standard input
-			data = sys.stdin.readline().strip()
+			data = sys.stdin.readline()
 			ser.write(data)
 			ser.write(chr(0))
 			sys.stdout.write('>>> ')

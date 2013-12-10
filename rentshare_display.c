@@ -15,14 +15,15 @@
 #define Dig4 26
 #define Dig5 24
 #define Dig6 22
+#define Dig7 6
 
 #define REFRESH_RATE 1
 
 #define SERIAL_TERM_CHAR 0
-#define SERIAL_BUFFER_SIZE 8
+#define SERIAL_BUFFER_SIZE 9
 
 const char seg_num_to_pin[]    = { SegA, SegB, SegC, SegD, SegE, SegF, SegG };
-const char digit_num_to_pin[]  = { Dig0, Dig1, Dig2, Dig3, Dig4, Dig5, Dig6 };
+const char digit_num_to_pin[]  = { Dig0, Dig1, Dig2, Dig3, Dig4, Dig5, Dig6, Dig7 };
 const char seg_num_to_bit[]    = { 0b1000000, 0b0100000, 0b0010000, 0b0001000, 0b0000100, 0b0000010, 0b0000001 };
 const char char_to_seg_map[] = {
   /* digits */
@@ -39,7 +40,7 @@ const char char_to_seg_map[] = {
   /* blank */
   0b0000000 };
 
-char display[7] = { '8', '8', '8', '8', '8', '8', '8' };
+char display[SERIAL_BUFFER_SIZE] = { '8', '8', '8', '8', '8', '8', '8', '8' };
 
 void setup() {
 	for ( char i = 0; i < sizeof( seg_num_to_pin ); i++ )
@@ -95,7 +96,7 @@ void loop() {
 	draw();
 
 	if ( Serial.available() > 0 ) {
-		char buffer[ SERIAL_BUFFER_SIZE ] = {0,0,0,0,0,0,0,0};
+		char buffer[ SERIAL_BUFFER_SIZE ] = {0,0,0,0,0,0,0,0,0};
 		// read the incoming byte:
 		Serial.readBytesUntil( SERIAL_TERM_CHAR, buffer, sizeof( buffer ) );
 
