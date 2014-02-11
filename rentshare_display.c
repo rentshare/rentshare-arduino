@@ -92,6 +92,55 @@ void draw() {
 	}
 }
 
+/*
+Randomizer!!!
+
+Upon an update from the serial bus, keep randomizing digits until the correct numbers are hit
+*/
+void update_sequence() {
+
+	// create an array of random digits
+	int ready = 0;
+	char target_display[SERIAL_BUFFER_SIZE];
+
+	memcpy( target_display, display, sizeof(display) );
+
+	for ( char i=0; i<sizeof( display ); i++ ) {
+
+		display[i] = 48;
+		if ( (target_display[i] < 48 || target_display[i] > 57) && (target_display[i] != 0 && target_display[i] != 10) ) {
+			Serial.print( "TARGET_DISPLAY[i]: ");
+			Serial.println( target_display[i], DEC );
+			return;
+		}
+
+	}
+
+	while ( ready < SERIAL_BUFFER_SIZE ) {
+		ready = 0;
+
+		for ( char i=0; i<sizeof( display ); i++ ) {
+			// if none of the digits are ready, randomize all (chars from '0' to '9'); else if a digit is ready, keep it, otherwise, randomize it
+			if ( display[i] != target_display[i] ) {
+				display[i] = random(48, 60);
+				if ( display[i] > 57 )
+					display[i] = (display[i] - 58) * 10;
+			}
+			//display[i] = ready > 0 ? ( display[i] == target_display[i] ? display[i] : random(49, 58) ) : random(49, 58);
+
+			if ( display[i] == target_display[i] )
+				ready++;
+		}
+
+		int delay_count=0;
+		while ( delay_count++ < 10 )
+			draw();
+
+		//delay(10);
+	}
+
+}
+
 void loop() {
 	draw();
 
@@ -102,8 +151,10 @@ void loop() {
 
 		// say what you got:
 		Serial.print("I received: ");
-		Serial.print( buffer );
+		Serial.println( buffer );
 		memcpy( display, buffer, sizeof( display ) );
+
+		update_sequence();
 		/*
 			if ( incomingByte == 116 ) {
 			  digitalWrite(ledPin, HIGH);   // sets the LED on
